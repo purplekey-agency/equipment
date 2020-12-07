@@ -22,8 +22,13 @@ Route::get('/login', 'PagesController@showLogin')->name('login');
 
 Route::get('/dashboard/users', 'AdminController@showUsersPage');
 Route::get('/dashboard/equipment', 'AdminController@showEquipmentPage');
+Route::get('/dashboard/equipment/add', 'AdminController@showAddEquipmentPage');
+Route::post('/dashboard/equipment/addequipment', 'AdminController@addEquipment');
+Route::post('/dashboard/equipment/print', 'AdminController@printLabel');
 Route::get('/dashboard/users/add', 'AdminController@showAddUserPage');
-Route::POST('/dashboard/users/adduser', 'AdminController@addUser');
+Route::post('/dashboard/users/adduser', 'AdminController@addUser');
+
+Route::get('/dashboard/statistics', 'AdminController@showStatisticsPage');
 
 
 Route::get('/dashboard', 'HomeController@showDashboard')->name('dashboard');

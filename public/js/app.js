@@ -49730,6 +49730,8 @@ module.exports = function(module) {
  */
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+__webpack_require__(/*! ./equipment */ "./resources/js/equipment.js");
+
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /**
  * The following block of code may be used to automatically register your
@@ -49868,6 +49870,36 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/equipment.js":
+/*!***********************************!*\
+  !*** ./resources/js/equipment.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+$(document).ready(function () {
+  $('#type').on('change', function () {
+    if (this.value == 0) {
+      $('#equipment_name_container').removeClass('hidden');
+      $('#equipment_name').prop('required', true);
+    } else {
+      $('#equipment_name_container').addClass('hidden');
+      $('#equipment_name').prop('required', false);
+    }
+  });
+  $('#rentable').on('change', function () {
+    if (this.value == 0) {
+      $('#nonrentabile_user_container').removeClass('hidden');
+      $('#nonrentabile_user').prop('required', true);
+    } else {
+      $('#nonrentabile_user_container').addClass('hidden');
+      $('#nonrentabile_user').prop('required', false);
+    }
+  });
+});
+
+/***/ }),
+
 /***/ "./resources/sass/app.scss":
 /*!*********************************!*\
   !*** ./resources/sass/app.scss ***!
@@ -49886,8 +49918,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\theWhiteWolf\Desktop\equipment\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\theWhiteWolf\Desktop\equipment\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\haris.muslic\Desktop\equipment\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\haris.muslic\Desktop\equipment\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

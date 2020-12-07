@@ -16,7 +16,7 @@ class CreateEquipmentTable extends Migration
         Schema::create('equipment', function (Blueprint $table) {
             $table->id();
             $table->string('equipment_name');
-            $table->boolean('equipment_rentable')->nullable();
+            $table->boolean('equipment_rentable');
             $table->string('equipment_user')->nullable();
             $table->timestamps();
         });

@@ -15,6 +15,11 @@ class CreateRentStatusTable extends Migration
     {
         Schema::create('rent_status', function (Blueprint $table) {
             $table->id();
+            $table->integer('equipment_id');
+            $table->boolean('rented');
+            $table->integer('user_rented_id');
+            $table->date('rented_at');
+            $table->date('returned_at');
             $table->timestamps();
         });
     }

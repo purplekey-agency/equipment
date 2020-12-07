@@ -1,0 +1,23 @@
+.hidden{
+    display: none;
+}
+
+.bold{
+    font-weight: 600;
+}
+
+.hover{
+    text-decoration: none;
+    color: #000;
+}
+
+.hover:hover{
+    text-decoration: none;
+    color: #000;
+    font-size: 12pt;
+    transition: font-size 0.2s;
+}
+
+#print_label_form{
+    display: none;
+}
