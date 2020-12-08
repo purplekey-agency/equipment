@@ -12,4 +12,8 @@ class RentStatus extends Model
      * @var string
      */
     protected $table = 'rent_status';
+
+    protected $fillable = [
+        'equipment_id', 'rented' ,'user_rented_id', 'rented_at', 'returned_at'
+    ];
 }

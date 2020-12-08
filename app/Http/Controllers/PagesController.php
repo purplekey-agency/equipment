@@ -17,7 +17,7 @@ class PagesController extends Controller
     public function showIndexPage(){
 
         if(Auth::user()){
-            return \redirect('dashboard');
+            return \redirect('/dashboard/equipment');
         }
 
         return view('welcome');

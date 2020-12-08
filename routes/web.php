@@ -20,16 +20,23 @@ Auth::routes(['register'=>false]);
 Route::get('/', 'PagesController@showIndexPage')->name('index');
 Route::get('/login', 'PagesController@showLogin')->name('login');
 
-Route::get('/dashboard/users', 'AdminController@showUsersPage');
-Route::get('/dashboard/equipment', 'AdminController@showEquipmentPage');
+Route::get('/dashboard/users', 'AdminController@showUsersPage')->name('users');
+Route::get('/dashboard/equipment', 'AdminController@showEquipmentPage')->name('equipment');
 Route::get('/dashboard/equipment/add', 'AdminController@showAddEquipmentPage');
 Route::post('/dashboard/equipment/addequipment', 'AdminController@addEquipment');
 Route::post('/dashboard/equipment/print', 'AdminController@printLabel');
+Route::post('/dashboard/equipment/printbulk', 'AdminController@printBulkLabel');
+Route::post('/dashboard/equipment/delete', 'AdminController@deleteEquipment');
 Route::get('/dashboard/users/add', 'AdminController@showAddUserPage');
 Route::post('/dashboard/users/adduser', 'AdminController@addUser');
 
-Route::get('/dashboard/statistics', 'AdminController@showStatisticsPage');
+Route::get('/dashboard/statistics', 'AdminController@showStatisticsPage')->name('statistics');
 
 
 Route::get('/dashboard', 'HomeController@showDashboard')->name('dashboard');
 Route::get('/dashboard/equipment/rent','HomeController@showRentEquipmentPage');
+Route::get('/dashboard/equipment/return','HomeController@showReturnEquipmentPage');
+Route::get('/dashboard/user/report','HomeController@showUserReportPage');
+
+Route::post('/dashboard/equipment/rent/confirm', 'HomeController@rentEquipment');
+Route::post('/dashboard/equipment/return/confirm', 'HomeController@returnEquipment');

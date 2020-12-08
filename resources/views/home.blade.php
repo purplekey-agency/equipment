@@ -31,6 +31,20 @@
                     </div>
                 </a>
                 @endif
+                @if(!Auth::user()->is_admin)
+                <a href="/dashboard/equipment/return">
+                    <div class="card-body">
+                        {{ __('Return equipment') }}
+                    </div>
+                </a>
+                @endif
+                @if(!Auth::user()->is_admin)
+                <a href="/dashboard/user/report">
+                    <div class="card-body">
+                        {{ __('See report') }}
+                    </div>
+                </a>
+                @endif
 
             </div>
         </div>

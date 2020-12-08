@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRentStatusTable extends Migration
+class CreateStatisticsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,8 @@ class CreateRentStatusTable extends Migration
      */
     public function up()
     {
-        Schema::create('rent_status', function (Blueprint $table) {
+        Schema::create('statistics', function (Blueprint $table) {
             $table->id();
-            $table->integer('equipment_id');
-            $table->boolean('rented')->default(false);
-            $table->integer('user_rented_id')->nullable();
-            $table->date('rented_at')->nullable();
-            $table->date('returned_at')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +26,6 @@ class CreateRentStatusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rent_status');
+        Schema::dropIfExists('statistics');
     }
 }
