@@ -22,6 +22,18 @@
                         </div>
                     </a>
                 </div>
+                <div class="row">
+                    <a href="/dashboard/equipment/rent" class="py-3 mx-auto">
+                        <div class="btn btn-primary">
+                            {{ __('Rent equipment') }}
+                        </div>
+                    </a>
+                    <a href="/dashboard/equipment/return" class="py-3 mx-auto">
+                        <div class="btn btn-primary">
+                            {{ __('Return equipment') }}
+                        </div>
+                    </a>
+                </div>
                 @if(Session::has('success'))
                 <div class="alert alert-success" role="alert">
                     {{Session::get('success')}}
@@ -96,7 +108,7 @@
                                 
                                 <div class="col-2 border-left border-right">{{$eq->id}}</div>
                                 <div class="col-3 border-right">{{$eq->equipment_name}}</div>
-                                <div class="col-3 border-right">{{$eq->getRentStatus($eq->id)}}</div></a>
+                                <div class="col-3 border-right @if($eq->getRentStatus($eq->id) === 'Rented') red @else green @endif">{{$eq->getRentStatus($eq->id)}}</div></a>
                                 <div class="col-2 border-right">{{$eq->getUserRentedName($eq->id)}}</div></a>
                             
                             <div class="col-2 border-right">

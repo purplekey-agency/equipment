@@ -40,3 +40,25 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.red{
+    color: red;
+}
+
+.green{
+    color: green;
+}
+
+.chart-container{
+    height: 0 !important;
+}
+
+.chart-container-active{
+    height: 500px !important;
+    width: 500px !important;
+    margin: 0 auto;
+}
+
+canvas{
+    margin: 0 auto !important;
+}

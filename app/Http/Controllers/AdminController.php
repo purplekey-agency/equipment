@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Equipment;
 use App\RentStatus;
+use App\Statistics;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use DNS1D;
 use PDF;
 use Storage;
+use Auth;
 
 use Illuminate\Http\Request;
 
@@ -39,7 +41,7 @@ class AdminController extends Controller
     }
 
     public function showAddEquipmentPage(){
-        $users = User::where('is_admin', false)->get();
+        $users = User::all();
         return view('admin.addequipment')->with([
             'users'=>$users,
         ]);
@@ -126,7 +128,17 @@ class AdminController extends Controller
         $barcodeImage = DNS1D::getBarcodeHTML($barcode, 'C128');
         $customPaper = array(0,0,141.90,212.85);
 
-        return PDF::loadHTML('<div class="margin:auto;">' . $barcodeImage . '</div>')->setPaper($customPaper, 'landscape')->setWarnings(false)->download($barcode . '.pdf');
+        $html = '';
+        $html .= '<style>';
+        $html .= '.page-break{';
+        $html .= 'page-break-after: always';
+        $html .= '}';
+        $html .= '</style>';
+        $html .= '<div class="margin:auto;">' . $barcodeImage . '</div>';
+        $html .= '<div class="margin:auto;"><p>' . $barcode . '</p></div>';
+        $html .= '<div class="page-break"></div>';
+
+        return PDF::loadHTML($html)->setPaper($customPaper, 'landscape')->setWarnings(false)->download($barcode . '.pdf');
     }
 
     public function printBulkLabel(Request $request){
@@ -248,14 +260,12 @@ class AdminController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'lastname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'ends_with:purplematrix.co.uk'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         $user = new User();
         $user->name = $validatedData["name"];
         $user->last_name = $validatedData["lastname"];
         $user->email = $validatedData["email"];
-        $user->password = Hash::make($validatedData["password"]);
 
         if($user->save()){
             return true;
@@ -266,6 +276,94 @@ class AdminController extends Controller
 
     }
 
+    public function showRentEquipmentPage(){
+
+        $users = User::where('id', '!=', Auth::user()->id)->get();
+
+        return view('user.rent')->with(['users'=>$users]);
+    }
+
+    public function showReturnEquipmentPage(){
+
+        $users = User::all();
+
+        return view('user.return')->with(['users'=>$users]);;
+    }
+
+    public function showUserReportPage(){
+        return view('user.report');
+    }
+
+    public function rentEquipment(Request $request){
+
+        $id = $request->barcode - 38700000;
+        
+        $equipment = Equipment::where('id', $id)->first();
+
+        if(!$equipment->equipment_rentable){
+            return redirect()->back()->with('error', 'Equipment is not rentable');
+        }
+        else{
+            $rentStatus = RentStatus::where('equipment_id', $id)->first();
+            if($rentStatus->rented){
+                return redirect()->back()->with('error', 'Equipment is already registered as rented by:' . $equipment->getUserRentedName($equipment->id));
+            }
+            else{
+                $rentStatus->rented = true;
+                $rentStatus->user_rented_id = $request->user;
+                $rentStatus->rented_at = \Carbon\Carbon::now();
+                $rentStatus->user_auth = Auth::user()->id;
+                $rentStatus->number_of_times_rented = $rentStatus->number_of_times_rented+1;
+                $rentStatus->save();
+
+                $statistics = new Statistics();
+                $statistics->auth_id = Auth::user()->id;
+                $statistics->renting_user_id = $request->user;
+                $statistics->renting_equipment_id = $id;
+                $statistics->rented_at = \Carbon\Carbon::now();
+                $statistics->save();
+
+                $user = User::where('id', $request->user)->first();
+                $user->number_of_items_rented = $user->number_of_items_rented + 1;
+                $user->save();
+
+                return redirect()->back()->with('success', 'You have succesfully rented equipment with id ' . $request->barcode);
+            }
+        }
+
+    }
+
+    public function returnEquipment(Request $request){
+
+        #dd($request);
+
+        $id = $request->barcode - 38700000;
+
+        $equipment = Equipment::where('id', $id)->first();
+
+        if(!$equipment->equipment_rentable){
+            return redirect()->back()->with('error', 'Equipment is not rentable.');
+        }
+        else{
+            $rentStatus = RentStatus::where('equipment_id', $id)->first();
+            if(!$rentStatus->rented){
+                return redirect()->back()->with('error', 'Equipment is not registered as rented.');
+            }
+            else{
+                $rentStatus->rented = false;
+                $rentStatus->user_rented_id = null;
+                $rentStatus->returned_at = \Carbon\Carbon::now();
+                $rentStatus->save();
+
+                $statistics = Statistics::where('renting_equipment_id', $id)->first();
+                $statistics->returned_at = \Carbon\Carbon::now();
+                $statistics->save();
+
+                return redirect()->back()->with('success', 'You have succesfully returned equipment with id ' . $request->barcode);
+            }
+        }
+    }
+
     public function showStatisticsPage(){
 
 
@@ -273,11 +371,46 @@ class AdminController extends Controller
         $nonrentabileEq = count(Equipment::where('equipment_rentable', false)->get());
         $rentabileEq = count(Equipment::where('equipment_rentable', true)->get());
 
+        //rented statistics
+        $rentedEq = count(RentStatus::where('rented', true)->get());
+        $nonRentedEq = count(RentStatus::where('rented', false)->get());
+
+        //most rented item
+        $mostRentedItems = RentStatus::orderBy('number_of_times_rented', 'desc')->take(5)->get();
+        $items = [];
+        $number = [];
+        foreach($mostRentedItems as $item){
+            array_push($items, ($item->getEquipmentName($item->equipment_id)));
+            array_push($number, $item->number_of_times_rented);
+        }
+
+
+        //most renting user
+        $mostRentingUser = User::orderBy('number_of_items_rented', 'desc')->take(5)->get();
+        $users = [];
+        $userNumber = [];
+        foreach($mostRentingUser as $user){
+            array_push($users, ($user->name . " " . $user->last_name));
+            array_push($userNumber, $user->number_of_items_rented);
+        }
+
+
+
 
         return view('admin.statistics')->with([
 
             'nonrenteq'=>$nonrentabileEq,
             'renteq'=>$rentabileEq,
+
+            'rentedEq'=>$rentedEq,
+            'nonRentedEq'=>$nonRentedEq,
+
+            'mostRentedItems'=>$items,
+            'mostRentedItemsNuber'=>$number,
+
+
+            'mostRentingUser'=>$users,
+            'mostRentingUserNumber'=>$userNumber,
 
         ]);
     }

@@ -34,9 +34,9 @@ Route::get('/dashboard/statistics', 'AdminController@showStatisticsPage')->name(
 
 
 Route::get('/dashboard', 'HomeController@showDashboard')->name('dashboard');
-Route::get('/dashboard/equipment/rent','HomeController@showRentEquipmentPage');
-Route::get('/dashboard/equipment/return','HomeController@showReturnEquipmentPage');
-Route::get('/dashboard/user/report','HomeController@showUserReportPage');
+Route::get('/dashboard/equipment/rent','AdminController@showRentEquipmentPage');
+Route::get('/dashboard/equipment/return','AdminController@showReturnEquipmentPage');
+Route::get('/dashboard/user/report','AdminController@showUserReportPage');
 
-Route::post('/dashboard/equipment/rent/confirm', 'HomeController@rentEquipment');
-Route::post('/dashboard/equipment/return/confirm', 'HomeController@returnEquipment');
+Route::post('/dashboard/equipment/rent/confirm', 'AdminController@rentEquipment');
+Route::post('/dashboard/equipment/return/confirm', 'AdminController@returnEquipment');

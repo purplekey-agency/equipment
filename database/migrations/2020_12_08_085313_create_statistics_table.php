@@ -15,6 +15,11 @@ class CreateStatisticsTable extends Migration
     {
         Schema::create('statistics', function (Blueprint $table) {
             $table->id();
+            $table->integer('auth_id');
+            $table->integer('renting_user_id');
+            $table->integer('renting_equipment_id');
+            $table->date('rented_at');
+            $table->date('returned_at')->nullable();
             $table->timestamps();
         });
     }

@@ -8,11 +8,13 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <a href="/dashboard/users/add" class="py-3 mx-auto">
-                    <div class="btn btn-primary">
-                        {{ __('Add user') }}
-                    </div>
-                </a>
+                <div class="row">
+                    <a href="/dashboard/users/add" class="py-3 mx-auto">
+                        <div class="btn btn-primary">
+                            {{ __('Add user') }}
+                        </div>
+                    </a>
+                </div>
                 <div class="card-header">{{ __('Users') }}</div>
                 
                 <div class="card-body">

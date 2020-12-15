@@ -20,6 +20,8 @@ class CreateRentStatusTable extends Migration
             $table->integer('user_rented_id')->nullable();
             $table->date('rented_at')->nullable();
             $table->date('returned_at')->nullable();
+            $table->integer('user_auth')->nullable();
+            $table->integer('number_of_times_rented')->default(0);
             $table->timestamps();
         });
     }
