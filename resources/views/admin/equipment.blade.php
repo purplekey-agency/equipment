@@ -5,24 +5,12 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="row">
+                <div class="row justify-content-between">
                     <a href="/dashboard/equipment/add" class="py-3 mx-auto">
                         <div class="btn btn-primary">
                             {{ __('Add equipment') }}
                         </div>
                     </a>
-                    <a href="javascript:void(0)" onclick="printBulkLabel()" title="Print Label" class="py-3 mx-auto">
-                        <div class="btn btn-primary">
-                            {{ __('Print all labels') }}
-                        </div>
-                    </a>
-                    <a href="/dashboard/equipment/add" class="py-3 mx-auto">
-                        <div class="btn btn-primary">
-                            {{ __('Print report') }}
-                        </div>
-                    </a>
-                </div>
-                <div class="row">
                     <a href="/dashboard/equipment/rent" class="py-3 mx-auto">
                         <div class="btn btn-primary">
                             {{ __('Rent equipment') }}
@@ -33,7 +21,18 @@
                             {{ __('Return equipment') }}
                         </div>
                     </a>
+                    <a href="/dashboard/equipment/add" class="py-3 mx-auto">
+                        <div class="btn btn-primary">
+                            {{ __('Print report') }}
+                        </div>
+                    </a>
+                    <a href="javascript:void(0)" onclick="printBulkLabel()" title="Print Label" class="py-3 mx-auto">
+                        <div class="btn btn-primary">
+                            {{ __('Print all labels') }}
+                        </div>
+                    </a>
                 </div>
+
                 @if(Session::has('success'))
                 <div class="alert alert-success" role="alert">
                     {{Session::get('success')}}
